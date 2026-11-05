@@ -5,7 +5,7 @@ description: Node.js, Corepack (Yarn 4) и установка зависимос
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v7
       with:
         node-version-file: .node-version
 
@@ -17,7 +17,7 @@ runs:
         corepack enable
 
     - name: Кэш пакетов Yarn
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ~/.yarn/berry/cache
         key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}

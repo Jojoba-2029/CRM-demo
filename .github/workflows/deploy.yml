@@ -25,12 +25,15 @@ jobs:
     name: Миграции Supabase
     needs: checks
     runs-on: ubuntu-latest
+    # Secrets и variables хранятся в окружении github-pages (Settings → Environments):
+    # их видят только деплойные job-ы из разрешённой ветки main
+    environment: github-pages
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup
 
@@ -56,13 +59,14 @@ jobs:
     name: Сборка для GitHub Pages
     needs: migrate
     runs-on: ubuntu-latest
+    environment: github-pages
     env:
       VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
       VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
       # Сайт открывается по адресу https://<owner>.github.io/<repo>/
       BASE_PATH: /${{ github.event.repository.name }}/
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup
 
@@ -81,9 +85,9 @@ jobs:
       - name: SPA-маршруты
         run: cp dist/index.html dist/404.html
 
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -99,4 +103,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
