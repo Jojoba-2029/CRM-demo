@@ -53,7 +53,8 @@ jobs:
 
       # Применяет только новые файлы из supabase/migrations. seed.sql в облаке не запускается.
       - name: Применить миграции
-        run: yarn supabase db push --yes
+        # --remote: в Supabase CLI 3 db push по умолчанию работает с локальной базой
+        run: yarn supabase db push --remote --yes
 
   build:
     name: Сборка для GitHub Pages
