@@ -20,7 +20,7 @@ jobs:
     name: Код фронтенда
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup
 
@@ -34,7 +34,7 @@ jobs:
     name: Тесты безопасности базы (pgTAP)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: ./.github/actions/setup
 
