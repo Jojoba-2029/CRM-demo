@@ -7,6 +7,7 @@ CRM для строительной компании: постановщики �
 - [Как устроена система — для руководителя](docs/overview.md)
 - [Решения и допущения](docs/decisions.md)
 - [Нюансы, коллизии и открытые вопросы](docs/known-issues.md)
+- [Деплой: GitHub Pages + Actions + Supabase](docs/deployment.md)
 
 ## Локальный запуск
 
@@ -80,17 +81,18 @@ src/
   components/        формы и общие компоненты
 ```
 
-## Облачный Supabase и деплой
+## Деплой
 
-1. Создайте проект в Supabase.
-2. Примените миграции: `yarn supabase link --project-ref <ref>` и `yarn supabase db push` (или выполните файл из `supabase/migrations` в SQL Editor).
-3. **Authentication → Sign In / Providers:** выключите _Allow new users to sign up_.
-4. **Authentication → Users → Add user:** создайте пользователей (email + пароль, _Auto Confirm User_). Каждый новый пользователь получает роль «Исполнитель». Постановщика назначьте в SQL Editor:
-   ```sql
-   update public.profiles set role = 'manager', full_name = 'Имя Фамилия' where email = 'manager@example.com';
-   ```
-   Имена исполнителей задаются так же (`full_name`).
-5. **Authentication → URL Configuration:** укажите адрес приложения в _Site URL_.
-6. Деплой фронтенда (Vercel / Netlify): команда установки `yarn install --immutable`, команда сборки `yarn build` (на Vercel для Yarn 4 добавьте переменную окружения `ENABLE_EXPERIMENTAL_COREPACK=1`), папка `dist`, переменные окружения `VITE_SUPABASE_URL` и `VITE_SUPABASE_ANON_KEY`. Для SPA-маршрутов нужен rewrite всех путей на `index.html` (для Vercel он уже задан в `vercel.json`, для Netlify — в `public/_redirects`).
+Приложение публикуется бесплатно: фронтенд — на **GitHub Pages**, база и авторизация — в **Supabase Free**, сборка и миграции — через **GitHub Actions** (`.github/workflows/deploy.yml`, на каждый пуш в `main`). Пошаговая настройка (secrets, variables, Supabase Auth, тестовые данные) и разбор ошибок — в [docs/deployment.md](docs/deployment.md).
 
-Ключ `service_role` во фронтенде и в репозитории не используется и не нужен.
+Без автоматики миграции можно применить вручную: `yarn supabase link --project-ref <ref>` и `yarn supabase db push`.
+
+**Пользователи в облаке.** Тестовых пользователей создаёт `supabase/seed.sql` (запускается один раз в SQL Editor). Новых пользователей можно добавить в **Authentication → Users → Add user** (email + пароль, _Auto Confirm User_): каждый получает роль «Исполнитель». Постановщика назначают в SQL Editor:
+
+```sql
+update public.profiles set role = 'manager', full_name = 'Имя Фамилия' where email = 'manager@example.com';
+```
+
+Имена исполнителей задаются так же (`full_name`).
+
+Ключ `service_role` (secret key) во фронтенде, в репозитории и в настройках Actions не используется и не нужен.

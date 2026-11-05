@@ -1,0 +1,49 @@
+# Проверки: форматирование, типы, линтер, unit-тесты, сборка и тесты безопасности базы.
+# Запускается на пуш в dev и на каждый PR. Для main его вызывает deploy.yml перед деплоем.
+name: CI
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    name: Код фронтенда
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup
+
+      - name: Форматирование, типы, линтер, unit-тесты
+        run: yarn verify
+
+      - name: Сборка
+        run: yarn build
+
+  database:
+    name: Тесты безопасности базы (pgTAP)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup
+
+      - name: Локальный Supabase (миграции + seed)
+        run: yarn supabase start -x studio,imgproxy,vector,logflare,edge-runtime,realtime,storage-api,supavisor,mailpit
+
+      - name: RLS, переходы статусов, история
+        run: yarn db:test
+
+      - name: Остановить Supabase
+        if: always()
+        run: yarn supabase stop --no-backup

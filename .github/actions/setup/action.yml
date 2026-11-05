@@ -1,0 +1,28 @@
+# Общая подготовка для всех workflow: Node из .node-version, Yarn 4 через Corepack, зависимости.
+name: Setup
+description: Node.js, Corepack (Yarn 4) и установка зависимостей
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: .node-version
+
+    # Corepack из поставки Node 22 старый и не проверяет подписи свежих релизов Yarn — ставим актуальный
+    - name: Corepack
+      shell: bash
+      run: |
+        npm install -g corepack@0.36.0
+        corepack enable
+
+    - name: Кэш пакетов Yarn
+      uses: actions/cache@v4
+      with:
+        path: ~/.yarn/berry/cache
+        key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+        restore-keys: yarn-${{ runner.os }}-
+
+    - name: Зависимости
+      shell: bash
+      run: yarn install --immutable
