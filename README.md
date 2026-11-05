@@ -11,7 +11,7 @@ CRM для строительной компании: постановщики �
 
 ## Локальный запуск
 
-Нужны Node.js 22.12+ (версия указана в `.node-version`; её проверяют `yarn install`, `yarn dev` и `yarn build`), Yarn 4 и запущенный Docker Desktop (для локального Supabase).
+Нужны Node.js 24.15+ (LTS; версия указана в `.node-version`; её проверяют `yarn install`, `yarn dev` и `yarn build`), Yarn 4 и запущенный Docker Desktop (для локального Supabase).
 
 Версия Yarn закреплена в `package.json` (`packageManager`), её подставляет [Corepack](https://yarnpkg.com/corepack). В Node.js 25+ Corepack не входит в поставку, его ставят отдельно:
 

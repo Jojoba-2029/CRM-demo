@@ -9,7 +9,7 @@ runs:
       with:
         node-version-file: .node-version
 
-    # Corepack из поставки Node 22 старый и не проверяет подписи свежих релизов Yarn — ставим актуальный
+    # Ставим фиксированную версию Corepack: встроенная в Node может отставать и не знать ключей подписи свежих релизов Yarn
     - name: Corepack
       shell: bash
       run: |
