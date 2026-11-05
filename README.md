@@ -85,7 +85,7 @@ src/
 
 Приложение публикуется бесплатно: фронтенд — на **GitHub Pages**, база и авторизация — в **Supabase Free**, сборка и миграции — через **GitHub Actions** (`.github/workflows/deploy.yml`, на каждый пуш в `main`). Пошаговая настройка (secrets, variables, Supabase Auth, тестовые данные) и разбор ошибок — в [docs/deployment.md](docs/deployment.md).
 
-Без автоматики миграции можно применить вручную: `yarn supabase link --project-ref <ref>` и `yarn supabase db push`.
+Без автоматики миграции можно применить вручную: `yarn supabase link --project-ref <ref>` и `yarn supabase db push --remote` (без `--remote` CLI 3 применяет миграции к локальной базе).
 
 **Пользователи в облаке.** Тестовых пользователей создаёт `supabase/seed.sql` (запускается один раз в SQL Editor). Новых пользователей можно добавить в **Authentication → Users → Add user** (email + пароль, _Auto Confirm User_): каждый получает роль «Исполнитель». Постановщика назначают в SQL Editor:
 
