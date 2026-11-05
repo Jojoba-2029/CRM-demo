@@ -18,3 +18,10 @@ supabase/.branches/
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# Исходники и инструменты для демо-видео (локально; готовый ролик — docs/media/demo.mp4)
+video/
+
+# Внутренние рабочие заметки (остаются только локально)
+docs/known-issues.md
+issues/
