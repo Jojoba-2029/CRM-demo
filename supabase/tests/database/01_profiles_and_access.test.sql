@@ -21,7 +21,7 @@ select is((select full_name from public.profiles where id = '33333333-3333-3333-
 select ok((select bool_and(relrowsecurity) from pg_class where oid in ('public.profiles'::regclass, 'public.objects'::regclass, 'public.tasks'::regclass, 'public.task_status_history'::regclass)), 'RLS включён на всех таблицах');
 
 insert into public.objects (id, name, address, created_by)
-values ('aaaaaaaa-0000-0000-0000-000000000001', 'ЖК Север', 'ул. Ленина, 1', '11111111-1111-1111-1111-111111111111');
+values ('aaaaaaaa-0000-0000-0000-000000000001', 'Объект А', 'г. Энск, ул. Тестовая, 1', '11111111-1111-1111-1111-111111111111');
 
 -- Анонимный пользователь не видит ничего
 set local role anon;

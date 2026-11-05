@@ -9,6 +9,9 @@ import "@mantine/notifications/styles.css";
 import { AuthProvider } from "./auth/AuthProvider";
 import { App } from "./App";
 
+// Тот же путь, что `base` в vite.config.ts ("/" или "/CRM-demo/"), без завершающего слэша
+const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, "") || "/";
+
 const container = document.getElementById("root");
 if (!container) throw new Error("Не найден элемент #root");
 
@@ -17,7 +20,7 @@ createRoot(container).render(
     <MantineProvider defaultColorScheme="light">
       <ModalsProvider>
         <Notifications position="top-right" />
-        <BrowserRouter>
+        <BrowserRouter basename={routerBasename}>
           <AuthProvider>
             <App />
           </AuthProvider>

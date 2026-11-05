@@ -1,0 +1,102 @@
+# Деплой: проверки → миграции в облачный Supabase → сборка → публикация на GitHub Pages.
+# Запускается на пуш в main или вручную (Actions → Deploy → Run workflow).
+# Что нужно настроить в репозитории — см. docs/deployment.md.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Не прерываем идущий деплой: миграции должны доехать до конца
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  checks:
+    name: Проверки
+    uses: ./.github/workflows/ci.yml
+
+  migrate:
+    name: Миграции Supabase
+    needs: checks
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup
+
+      - name: Проверить настройки
+        run: |
+          missing=""
+          [ -n "$SUPABASE_ACCESS_TOKEN" ] || missing="$missing SUPABASE_ACCESS_TOKEN(secret)"
+          [ -n "$SUPABASE_DB_PASSWORD" ]  || missing="$missing SUPABASE_DB_PASSWORD(secret)"
+          [ -n "$SUPABASE_PROJECT_REF" ]  || missing="$missing SUPABASE_PROJECT_REF(variable)"
+          if [ -n "$missing" ]; then
+            echo "::error::Не заданы:$missing. См. docs/deployment.md"
+            exit 1
+          fi
+
+      - name: Привязать проект
+        run: yarn supabase link --project-ref "$SUPABASE_PROJECT_REF"
+
+      # Применяет только новые файлы из supabase/migrations. seed.sql в облаке не запускается.
+      - name: Применить миграции
+        run: yarn supabase db push --yes
+
+  build:
+    name: Сборка для GitHub Pages
+    needs: migrate
+    runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+      # Сайт открывается по адресу https://<owner>.github.io/<repo>/
+      BASE_PATH: /${{ github.event.repository.name }}/
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup
+
+      - name: Проверить настройки
+        run: |
+          if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
+            echo "::error::Не заданы variables VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY. См. docs/deployment.md"
+            exit 1
+          fi
+
+      - name: Сборка
+        run: yarn build
+
+      # GitHub Pages не умеет отдавать index.html для любых путей, а 404.html — умеет:
+      # так прямые ссылки вроде /CRM-demo/tasks/... открывают приложение, а не ошибку
+      - name: SPA-маршруты
+        run: cp dist/index.html dist/404.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Публикация
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
