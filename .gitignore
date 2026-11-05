@@ -9,3 +9,12 @@ dist/
 .idea/
 supabase/.temp/
 supabase/.branches/
+
+# Yarn 4 (без Zero-Installs)
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

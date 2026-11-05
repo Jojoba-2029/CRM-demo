@@ -1,0 +1,7 @@
+# Единые окончания строк (LF) на всех ОС — так же настроен форматтер (.oxfmtrc.json)
+* text=auto eol=lf
+
+*.docx binary
+*.png binary
+*.jpg binary
+*.ico binary
