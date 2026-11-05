@@ -4,14 +4,14 @@ CRM для строительной компании: постановщики �
 
 **Стек:** React 19 + TypeScript 7, Vite, Mantine, Supabase (Postgres, Auth, RLS).
 
-- [Демо-видео (3 минуты): как устроена система и как защищены данные](docs/media/demo.mp4)
+**Приложение доступно** до 12.11.2026 на https://jojoba-2029.github.io/CRM-demo/
+
+**Креды:** логины и пароль — в разделе [Тестовые пользователи](#тестовые-пользователи) (внутри «Локальный запуск»).
+
+- [Демо-видео (3 минуты): как устроена система и как защищены данные](https://jojoba-2029.github.io/CRM-demo/media/demo.mp4)
 - [Как устроена система — для руководителя](docs/overview.md)
 - [Решения и допущения](docs/decisions.md)
 - [Деплой: GitHub Pages + Actions + Supabase](docs/deployment.md)
-- - **Приложение доступно** до 12.11.2026 на https://jojoba-2029.github.io/CRM-demo/objects
-- - Демо-видео: 
-
-https://github.com/user-attachments/assets/4ffbda79-d051-421c-bb78-07d0a54da963
 
 ## Локальный запуск
 
@@ -38,7 +38,7 @@ yarn db:status        # показывает API URL и anon key
 yarn dev              # http://localhost:5173
 ```
 
-### Тестовые пользователи (локально)
+### Тестовые пользователи
 
 Пароль у всех:`Password123!`
 
