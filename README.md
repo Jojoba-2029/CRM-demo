@@ -8,6 +8,7 @@ CRM для строительной компании: постановщики �
 - [Как устроена система — для руководителя](docs/overview.md)
 - [Решения и допущения](docs/decisions.md)
 - [Деплой: GitHub Pages + Actions + Supabase](docs/deployment.md)
+- - **Приложение доступно** до 12.11.2026 на https://jojoba-2029.github.io/CRM-demo/objects
 - - Демо-видео: 
 
 https://github.com/user-attachments/assets/4ffbda79-d051-421c-bb78-07d0a54da963
