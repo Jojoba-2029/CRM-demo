@@ -4,9 +4,9 @@ CRM для строительной компании: постановщики �
 
 **Стек:** React 19 + TypeScript 7, Vite, Mantine, Supabase (Postgres, Auth, RLS).
 
+- [Демо-видео (3 минуты): как устроена система и как защищены данные](docs/media/demo.mp4)
 - [Как устроена система — для руководителя](docs/overview.md)
 - [Решения и допущения](docs/decisions.md)
-- [Нюансы, коллизии и открытые вопросы](docs/known-issues.md)
 - [Деплой: GitHub Pages + Actions + Supabase](docs/deployment.md)
 
 ## Локальный запуск
